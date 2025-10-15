@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "solarmax-marketing-mobile",
-    "slug": "solarmax-marketing-mobile",
+    "name": "react-native-expo-template-typescript",
+    "slug": "react-native-expo-template-typescript",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
