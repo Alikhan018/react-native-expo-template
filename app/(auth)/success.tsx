@@ -232,7 +232,7 @@ export default function RegistrationSuccessScreen() {
 
                         <View style={styles.infoBox}>
                             <Text style={styles.infoText}>
-                                Welcome to SolarMax! You can now log in to access your dashboard and start managing your solar energy.
+                                Welcome to App! You can now log in to access your dashboard and start managing your profile.
                             </Text>
                         </View>
 

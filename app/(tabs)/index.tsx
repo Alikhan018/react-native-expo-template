@@ -26,7 +26,7 @@ export default function HomeTabScreen() {
     return (
         <Screen>
             <View style={styles.container}>
-                <Text style={styles.title}>Welcome to SolarMax</Text>
+                <Text style={styles.title}>Welcome to App</Text>
                 <Text style={styles.subtitle}>This is your home tab.</Text>
             </View>
         </Screen>

@@ -196,7 +196,7 @@ export default function RegisterScreen() {
                 >
                     <View style={styles.formContainer}>
                         <Text style={styles.title}>Create Your Account</Text>
-                        <Text style={styles.subtitle}>Join SolarMax to manage your solar energy</Text>
+                        <Text style={styles.subtitle}>Join App to manage your profiles</Text>
 
                         <Controller
                             control={control}

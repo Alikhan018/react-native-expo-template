@@ -65,7 +65,6 @@ export default function LoginScreen() {
             console.log('Error response:', error.response);
             console.log('Error data:', error.response?.data);
 
-            // Check for profile incomplete error
             const errorMessage = error.response?.data?.error || error.response?.data?.message;
 
             if (error.response?.status === 400 && errorMessage === 'Profile incomplete') {
@@ -77,10 +76,9 @@ export default function LoginScreen() {
                         fromLogin: 'true'
                     }
                 });
-                return; // Exit early
+                return;
             }
 
-            // Handle other errors
             Alert.alert(
                 'Login Failed',
                 errorMessage || 'Invalid email or password',
@@ -208,7 +206,7 @@ export default function LoginScreen() {
                 >
                     <View style={styles.formContainer}>
                         <Text style={styles.title}>Welcome Back</Text>
-                        <Text style={styles.subtitle}>Sign in to manage your solar energy</Text>
+                        <Text style={styles.subtitle}>Sign in to manage your profiles</Text>
 
                         <Controller
                             control={control}
