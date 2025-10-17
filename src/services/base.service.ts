@@ -4,7 +4,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { config } from '@/environment/environment';
 
 const API_BASE_URL = config.apiUrl;
-const AUTH_TOKEN_KEY = config.authTokenKey;
+const AUTH_TOKEN_KEY = config.authTokenKey || '@auth_token';
 
 export class BaseApiService {
     protected api: AxiosInstance;

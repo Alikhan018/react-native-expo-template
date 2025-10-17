@@ -1,21 +1,32 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Image, Dimensions, Animated, ImageBackground } from 'react-native';
-import { useRouter } from 'expo-router';
+import { Redirect, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
 import { FontAwesome } from '@expo/vector-icons';
 import { useTheme } from '@/theme/index';
-import { Screen, Text } from '@/components/ui';
+import { LoadingSpinner, Screen, Text } from '@/components/ui';
 import { TouchableOpacity } from 'react-native';
 import { APP_DESCRIPTION, APP_NAME, APP_TITLE, features } from '@/constants/landing-page';
+import { useAuth } from '@/hooks/useAuth';
 
 const { width, height } = Dimensions.get('window');
 
 export default function LandingScreen() {
     const { colors, spacing, isDark } = useTheme();
+    const { isAuthenticated, isLoading } = useAuth()
     const router = useRouter();
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000' }}>
+                <LoadingSpinner size="large" />
+            </View>
+        );
+    }
 
-    // Animations
+    if (isAuthenticated) {
+        return <Redirect href="/(tabs)" />;
+    }
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const scaleAnim = useRef(new Animated.Value(0.9)).current;
     const translateYAnim = useRef(new Animated.Value(20)).current;

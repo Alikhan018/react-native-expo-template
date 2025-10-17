@@ -1,10 +1,28 @@
 import { Tabs } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { useTheme } from '@theme/index';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
+import { LoadingSpinner } from '@/components/ui';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function TabLayout() {
     const { colors, spacing } = useTheme();
+    const { isLoading, isAuthenticated } = useAuth();
+
+    // Show loading while checking auth
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <LoadingSpinner size='large' />
+            </View>
+        );
+    }
+
+    // This will be handled by AuthProvider navigation,
+    // but adding as extra safety
+    if (!isAuthenticated) {
+        return null;
+    }
 
     return (
         <Tabs

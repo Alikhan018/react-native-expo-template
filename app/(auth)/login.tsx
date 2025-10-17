@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Dimensions, Animated, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, Animated, ImageBackground, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
@@ -9,6 +9,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui';
 import { Input } from '@/components/ui';
 import { FontAwesome } from '@expo/vector-icons';
+import { AuthService } from '@/services/auth.service';
+import { useAuth } from '@/hooks/useAuth';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,6 +21,7 @@ type LoginFormData = {
 
 export default function LoginScreen() {
     const { colors, spacing, isDark } = useTheme();
+    const { signIn } = useAuth();
     const router = useRouter();
 
     // Form setup with react-hook-form
@@ -50,14 +53,39 @@ export default function LoginScreen() {
     }, []);
 
     // Form submission handler
+    // In your login screen component
     const onSubmit = async (data: LoginFormData) => {
         try {
-            // Simulate login API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log('Login data:', data);
-            router.push('/dashboard'); // Navigate to dashboard after successful login
-        } catch (error) {
+            const as = new AuthService();
+            const res = await as.login(data);
+            await signIn(res.token, res.user);
+            router.push('/(tabs)/');
+        } catch (error: any) {
             console.error('Login error:', error);
+            console.log('Error response:', error.response);
+            console.log('Error data:', error.response?.data);
+
+            // Check for profile incomplete error
+            const errorMessage = error.response?.data?.error || error.response?.data?.message;
+
+            if (error.response?.status === 400 && errorMessage === 'Profile incomplete') {
+                console.log('Profile incomplete - redirecting to complete profile');
+                router.push({
+                    pathname: '/(auth)/complete-profile',
+                    params: {
+                        email: data.email,
+                        fromLogin: 'true'
+                    }
+                });
+                return; // Exit early
+            }
+
+            // Handle other errors
+            Alert.alert(
+                'Login Failed',
+                errorMessage || 'Invalid email or password',
+                [{ text: 'OK' }]
+            );
         }
     };
 
@@ -247,7 +275,7 @@ export default function LoginScreen() {
 
                         <View style={styles.footer}>
                             <Text style={styles.footerText}>Don't have an account?</Text>
-                            <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+                            <TouchableOpacity onPress={() => router.push('/(auth)/signup')}>
                                 <Text style={styles.footerLink}>Sign Up</Text>
                             </TouchableOpacity>
                         </View>

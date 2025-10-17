@@ -10,10 +10,12 @@ import { useForm, Controller } from 'react-hook-form';
 import { Button } from '@/components/ui';
 import { Input } from '@/components/ui';
 import { FontAwesome } from '@expo/vector-icons';
+import { AuthService } from '@/services/auth.service';
 
 const { width, height } = Dimensions.get('window');
 
 type RegisterFormData = {
+    username: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -26,6 +28,7 @@ export default function RegisterScreen() {
     // Form setup with react-hook-form
     const { control, handleSubmit, formState: { errors, isSubmitting }, watch } = useForm<RegisterFormData>({
         defaultValues: {
+            username: '',
             email: '',
             password: '',
             confirmPassword: '',
@@ -58,10 +61,17 @@ export default function RegisterScreen() {
     // Form submission handler
     const onSubmit = async (data: RegisterFormData) => {
         try {
-            // Simulate registration API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log('Register data:', data);
-            router.push('/dashboard'); // Navigate to dashboard after successful registration
+            const registerData = { username: data.username, email: data.email, password: data.password };
+            const as = new AuthService();
+            const response = await as.register(registerData);
+            if (response.message === 'OTP sent to email') {
+                router.push({
+                    pathname: '/(auth)/verify-otp',
+                    params: { email: data.email }
+                });
+            } else {
+                throw "OTP not sent";
+            }
         } catch (error) {
             console.error('Registration error:', error);
         }
@@ -166,7 +176,7 @@ export default function RegisterScreen() {
     return (
         <Screen>
             <ImageBackground
-                source={{ uri: 'https://example.com/solar-background.jpg' }} // Replace with actual asset
+                source={require('../../assets/background-landing.jpg')} // Replace with actual asset
                 style={styles.backgroundImage}
                 resizeMode="cover"
             >
@@ -188,6 +198,22 @@ export default function RegisterScreen() {
                         <Text style={styles.title}>Create Your Account</Text>
                         <Text style={styles.subtitle}>Join SolarMax to manage your solar energy</Text>
 
+                        <Controller
+                            control={control}
+                            name="username"
+                            rules={{
+                                required: 'username is required',
+                            }}
+                            render={({ field: { onChange, value } }) => (
+                                <Input
+                                    label="Username"
+                                    value={value}
+                                    onChangeText={onChange}
+                                    error={errors.username?.message}
+                                    autoCapitalize="none"
+                                />
+                            )}
+                        />
                         <Controller
                             control={control}
                             name="email"

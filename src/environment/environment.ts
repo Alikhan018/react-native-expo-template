@@ -1,7 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import constants from '../../app.config';
+
+const extra = constants.expo.extra;
 
 export const config = {
-    apiUrl: process.env.API_BASE_URL || 'http://localhost:3000',
-    authTokenKey: process.env.AUTH_TOKEN_KEY || '@auth_token',
+    apiUrl: extra.API_URL,
+    authTokenKey: extra.AUTH_TOKEN_KEY,
+    authUserKey: extra.AUTH_USER_KEY,
 } as const;

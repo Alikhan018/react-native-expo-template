@@ -3,6 +3,7 @@ import { ThemeProvider, useTheme } from '@theme/index';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
+import { AuthProvider } from '@/context/AuthContext';
 
 // Inner component that has access to theme
 function RootLayoutNav() {
@@ -40,11 +41,13 @@ function RootLayoutNav() {
 // Root component that provides theme
 export default function RootLayout() {
     return (
-        <GestureHandlerRootView style={styles.container}>
-            <ThemeProvider>
-                <RootLayoutNav />
-            </ThemeProvider>
-        </GestureHandlerRootView>
+        <AuthProvider>
+            <GestureHandlerRootView style={styles.container}>
+                <ThemeProvider>
+                    <RootLayoutNav />
+                </ThemeProvider>
+            </GestureHandlerRootView>
+        </AuthProvider>
     );
 }
 
